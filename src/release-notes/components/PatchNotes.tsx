@@ -11,6 +11,8 @@ const SectionToLabelMap: Record<string, string> = {
   deprecations: 'Deprecations',
   backups: 'Backups',
   errata: 'Errata',
+  closing_down: 'Closing down',
+  retired: 'Retired',
 }
 
 type Props = {
@@ -24,7 +26,7 @@ export function PatchNotes({ patch }: Props) {
         return (
           <div key={key}>
             <HeadingLink as="h3" slug={sectionSlug}>
-              {`${patch.version}: ${SectionToLabelMap[key]}` || 'INVALID SECTION'}
+              {`${patch.version}: ${SectionToLabelMap[key] || 'INVALID SECTION'}`}
             </HeadingLink>
 
             <ul>

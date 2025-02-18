@@ -6,7 +6,6 @@ intro: |-
   data extensions.
 versions: # DO NOT MANUALLY EDIT. CHANGES WILL BE OVERWRITTEN BY A 🤖
   fpt: '*'
-  ghae: '*'
   ghec: '*'
   ghes: '*'
 topics:
@@ -30,9 +29,8 @@ codeql resolve extensions-by-pack <options>... -- <pack>...
 
 ## Description
 
-\[Experimental] \[Deep plumbing] Determine accessible extensions for
-the given paths to pack roots. This includes machine learning models and
-data extensions.
+\[Deep plumbing] Determine accessible extensions for the given paths to
+pack roots. This includes machine learning models and data extensions.
 
 This plumbing command resolves the set of data extensions and
 GitHub-created machine learning models that are available to the paths
@@ -87,11 +85,17 @@ value.
 
 (Note: On Windows the path separator is `;`).
 
+#### `--model-packs=<`<name@range>>...
+
+A list of CodeQL pack names, each with an optional version range, to be
+used as model packs to customize the queries that are about to be
+evaluated.
+
 #### `--threat-model=<name>...`
 
 A list of threat models to enable or disable.
 
-The argument is the name of a threat model, optionally preceeded by a
+The argument is the name of a threat model, optionally preceded by a
 '!'. If no '!' is present, the named threat model and all of its
 descendants are enabled. If a '!' is present, the named threat model
 and all of its descendants are disabled.

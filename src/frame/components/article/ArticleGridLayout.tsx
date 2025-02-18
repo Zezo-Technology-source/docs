@@ -12,6 +12,7 @@ type Props = {
   children?: React.ReactNode
   className?: string
   supportPortalVaIframeProps?: SupportPortalVaIframeProps
+  fullWidth?: boolean
 }
 export const ArticleGridLayout = ({
   intro,
@@ -20,10 +21,18 @@ export const ArticleGridLayout = ({
   children,
   className,
   supportPortalVaIframeProps,
+  fullWidth,
 }: Props) => {
+  const containerBoxStyles = fullWidth ? '' : styles.containerBox
   return (
-    <Box className={cx(styles.containerBox, className)}>
+    <div className={cx(containerBoxStyles, className)}>
       {topper && <Box gridArea="topper">{topper}</Box>}
+      {intro && (
+        <Box id="article-intro" gridArea="intro" className="f4 pb-4">
+          {intro}
+        </Box>
+      )}
+
       {toc && (
         <Box
           data-container="toc"
@@ -35,12 +44,6 @@ export const ArticleGridLayout = ({
         </Box>
       )}
 
-      {intro && (
-        <Box id="article-intro" gridArea="intro" className="f4">
-          {intro}
-        </Box>
-      )}
-
       <Box data-container="article" gridArea="content" data-search="article-body">
         {supportPortalVaIframeProps &&
           supportPortalVaIframeProps.supportPortalUrl &&
@@ -49,6 +52,6 @@ export const ArticleGridLayout = ({
           )}
         {children}
       </Box>
-    </Box>
+    </div>
   )
 }

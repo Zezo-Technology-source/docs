@@ -12,13 +12,15 @@ import { useMainContext } from 'src/frame/components/context/MainContext'
 import { useTranslation } from 'src/languages/components/useTranslation'
 import { Breadcrumbs } from 'src/frame/components/page-header/Breadcrumbs'
 import { useLanguages } from 'src/languages/components/LanguagesContext'
+import { ClientSideLanguageRedirect } from './ClientSideLanguageRedirect'
+import { DomainNameEditProvider } from 'src/links/components/useEditableDomainContext'
 
 const MINIMAL_RENDER = Boolean(JSON.parse(process.env.MINIMAL_RENDER || 'false'))
 
 type Props = { children?: React.ReactNode }
 export const DefaultLayout = (props: Props) => {
+  const mainContext = useMainContext()
   const {
-    page,
     error,
     isHomepageVersion,
     currentPathWithoutLanguage,
@@ -27,10 +29,10 @@ export const DefaultLayout = (props: Props) => {
     relativePath,
     fullUrl,
     status,
-  } = useMainContext()
+  } = mainContext
+  const page = mainContext.page!
   const { t } = useTranslation(['meta', 'scroll_button'])
   const router = useRouter()
-  const metaDescription = page.introPlainText ? page.introPlainText : t('default_description')
   const { languages } = useLanguages()
 
   // This is only true when we do search indexing which renders every page
@@ -55,8 +57,10 @@ export const DefaultLayout = (props: Props) => {
     )
   }
 
+  const metaDescription = page.introPlainText ? page.introPlainText : t('default_description')
+
   return (
-    <>
+    <DomainNameEditProvider>
       <Head>
         {error === '404' ? (
           <title>{t('oops')}</title>
@@ -121,6 +125,7 @@ export const DefaultLayout = (props: Props) => {
         Skip to main content
       </a>
       <Header />
+      <ClientSideLanguageRedirect />
       <div className="d-lg-flex">
         {isHomepageVersion ? null : <SidebarNav />}
         {/* Need to set an explicit height for sticky elements since we also
@@ -142,6 +147,6 @@ export const DefaultLayout = (props: Props) => {
           </footer>
         </div>
       </div>
-    </>
+    </DomainNameEditProvider>
   )
 }

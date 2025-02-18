@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { turnOffExperimentsInPage, turnOnExperimentsInPage } from '../helpers/turn-off-experiments'
 
 const pages: { [key: string]: string } = {
   category: '/actions/category',
@@ -13,7 +14,7 @@ const pages: { [key: string]: string } = {
   productLanding: '/code-security',
   restCategory: '/rest/actions/artifacts',
   restLanding: '/rest',
-  restOverview: '/rest/overview/about-githubs-apis',
+  restOverview: '/rest/about-the-rest-api/comparing-githubs-rest-api-and-graphql-api',
   search: '/search?q=playwright',
   switchers: '/get-started/liquid/tool-platform-switcher',
   tableWithHeaders: '/get-started/liquid/table-row-headers',
@@ -24,8 +25,21 @@ const pages: { [key: string]: string } = {
 // create a test for each page, will eventually be separated into finer grain tests
 Object.keys(pages).forEach((pageName) => {
   test.describe(`${pageName}`, () => {
-    test('full page axe scan', async ({ page }) => {
+    test('full page axe scan without experiments', async ({ page }) => {
       await page.goto(pages[pageName])
+
+      await turnOffExperimentsInPage(page)
+
+      const accessibilityScanResults = await new AxeBuilder({ page }).analyze()
+
+      expect(accessibilityScanResults.violations).toEqual([])
+    })
+  })
+  test.describe(`${pageName} (with experiments)`, () => {
+    test('full page axe scan with experiments', async ({ page }) => {
+      await page.goto(pages[pageName])
+
+      await turnOnExperimentsInPage(page)
 
       const accessibilityScanResults = await new AxeBuilder({ page }).analyze()
 

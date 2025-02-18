@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest'
+
 import { getDataByLanguage } from '#src/data-directory/lib/get-data.js'
 import { getDOM } from '#src/tests/helpers/e2etest.js'
 import { supported } from '#src/versions/lib/enterprise-server-releases.js'
@@ -193,7 +195,7 @@ describe('ifversion', () => {
         return matchesPerVersion[version].includes(condition)
       })
 
-      // this is the inverse of the above, conditions that shoudn't match for this rendered version
+      // this is the inverse of the above, conditions that shouldn't match for this rendered version
       const unwantedConditions = allConditions.filter((condition) => {
         return !matchesPerVersion[version].includes(condition)
       })
@@ -223,6 +225,17 @@ describe('misc Liquid', () => {
       .get()
     expect(texts[0]).toBe(url)
     expect(texts[1]).toBe('Pricing')
+  })
+
+  test('page with tool Liquid tag followed by Markdown', async () => {
+    // This test tests Markdown being correctly rendered when the
+    // Markdown directly follows a tool tag like `{% linux %}...{% endlinux %}`.
+    // The next line immediately after the `{% endlinux %}` should not
+    // leave the Markdown unrendered
+    const $ = await getDOM('/get-started/liquid/tool-platform-switcher')
+    const innerHTML = $('#article-contents').html()
+    expect(innerHTML).not.toMatch('On *this* line is `Markdown` too.')
+    expect(innerHTML).toMatch('<p>On <em>this</em> line is <code>Markdown</code> too.</p>')
   })
 })
 

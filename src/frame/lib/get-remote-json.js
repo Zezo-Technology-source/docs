@@ -13,8 +13,8 @@ const inProd = process.env.NODE_ENV === 'production'
 
 // Wrapper on `got()` that is able to both cache in memory and on disk.
 // The on-disk caching is in `.remotejson/`.
-// We use this for downloading `redirects.json` files from the
-// help-docs-archived-enterprise-versions repo as a proxy. A lot of those
+// We use this for downloading `redirects.json` files from one of the
+// docs-ghes-<release number> repos as a proxy. A lot of those
 // .json files are large and they're also static which makes them
 // ideal for caching.
 // Note that there's 2 layers of caching here:
@@ -85,7 +85,7 @@ export default async function getRemoteJSON(url, config) {
       }
     }
   }
-  const tags = [`url:${url}`, `from_cache:${fromCache}`]
+  const tags = [`from_cache:${fromCache}`]
   statsd.increment('middleware.get_remote_json', 1, tags)
   return cache.get(cacheKey)
 }

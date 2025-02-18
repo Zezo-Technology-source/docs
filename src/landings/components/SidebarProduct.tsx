@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { NavList } from '@primer/react'
@@ -49,23 +50,21 @@ export const SidebarProduct = () => {
       nonAutomatedRestPaths.every((item: string) => !page.href.includes(item)),
     )
     return (
-      <>
-        <div className="ml-3">
-          <NavList aria-label="REST sidebar overview articles">
-            {conceptualPages.map((childPage) => (
-              <NavListItem key={childPage.href} childPage={childPage} />
-            ))}
-          </NavList>
+      <div className="ml-3">
+        <NavList aria-label="REST sidebar overview articles">
+          {conceptualPages.map((childPage) => (
+            <NavListItem key={childPage.href} childPage={childPage} />
+          ))}
+        </NavList>
 
-          <hr data-testid="rest-sidebar-reference" className="m-2" />
+        <hr data-testid="rest-sidebar-reference" className="m-2" />
 
-          <NavList aria-label="REST sidebar reference pages">
-            {restPages.map((category) => (
-              <RestNavListItem key={category.href} category={category} />
-            ))}
-          </NavList>
-        </div>
-      </>
+        <NavList aria-label="REST sidebar reference pages">
+          {restPages.map((category) => (
+            <RestNavListItem key={category.href} category={category} />
+          ))}
+        </NavList>
+      </div>
     )
   }
 
@@ -77,24 +76,26 @@ export const SidebarProduct = () => {
 }
 
 function NavListItem({ childPage }: { childPage: ProductTreeNode }) {
-  const { push, asPath, locale } = useRouter()
+  const { asPath, locale } = useRouter()
   const routePath = `/${locale}${asPath.split('?')[0].split('#')[0]}`
   const isActive = routePath === childPage.href
+  const specialCategory = childPage.href.endsWith('/copilot/copilot-chat-cookbook')
 
   return (
     <NavList.Item
       defaultOpen={childPage.childPages.length > 0 && routePath.includes(childPage.href)}
       href={childPage.href}
+      as={Link}
       aria-current={isActive ? 'page' : false}
-      onClick={(event) => {
-        // XXX TODO: If the `childPage.href` is an external link, don't try to do anything fancy here.
-        event.preventDefault()
-        push(childPage.href)
-      }}
     >
       {childPage.title}
       {childPage.childPages.length > 0 && (
         <NavList.SubNav aria-label={childPage.title} sx={{ '*': { fontSize: 1 } }}>
+          {specialCategory && (
+            <NavList.Item href={childPage.href} as={Link} aria-current={isActive ? 'page' : false}>
+              All prompts
+            </NavList.Item>
+          )}
           {childPage.childPages.map((childPage) => (
             <NavListItem key={childPage.href} childPage={childPage} />
           ))}

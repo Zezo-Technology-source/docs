@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest'
+
 import { get, getDOMCached as getDOM } from '#src/tests/helpers/e2etest.js'
 
 describe('guides', () => {
@@ -8,9 +10,9 @@ describe('guides', () => {
     expect($('title').text()).toMatch(title)
     expect($('h1').text()).toMatch(title)
     const learningPaths = $('h2#learning-paths')
-    expect(learningPaths.text()).toMatch('Code security learning paths')
+    expect(learningPaths.text()).toMatch('HubGit Code security learning paths')
     const allGuides = $('h2#all-guides')
-    expect(allGuides.text()).toMatch('All Code security guides')
+    expect(allGuides.text()).toMatch('All HubGit Code security guides')
   })
 })
 

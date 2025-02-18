@@ -2,7 +2,6 @@
 title: execute queries
 versions: # DO NOT MANUALLY EDIT. CHANGES WILL BE OVERWRITTEN BY A 🤖
   fpt: '*'
-  ghae: '*'
   ghec: '*'
   ghes: '*'
 topics:
@@ -43,14 +42,14 @@ This command should not normally be invoked directly. Instead use either
 
 \[Mandatory] Path to the raw QL dataset to query.
 
-#### `<querysuite|pack>...`
+#### `<query|dir|suite|pack>...`
 
 \[Mandatory] Queries to execute. Each argument is in the form
 `scope/name@range:path` where:
 
-- `scope/name` is the qualified name of a CodeQL pack.
-- `range` is a semver range.
-- `path` is a file system path.
+* `scope/name` is the qualified name of a CodeQL pack.
+* `range` is a semver range.
+* `path` is a file system path.
 
 If a `scope/name` is specified, the `range` and `path` are optional. A
 missing `range` implies the latest version of the specified pack. A
@@ -82,13 +81,21 @@ human-readable representation of the results to standard output.
 Omit evaluation of queries that already seem to have a BQRS result
 stored in the output location.
 
+### Options to control the model packs to be used
+
+#### `--model-packs=<`<name@range>>...
+
+A list of CodeQL pack names, each with an optional version range, to be
+used as model packs to customize the queries that are about to be
+evaluated.
+
 ### Options to control the threat models to be used
 
 #### `--threat-model=<name>...`
 
 A list of threat models to enable or disable.
 
-The argument is the name of a threat model, optionally preceeded by a
+The argument is the name of a threat model, optionally preceded by a
 '!'. If no '!' is present, the named threat model and all of its
 descendants are enabled. If a '!' is present, the named threat model
 and all of its descendants are disabled.
